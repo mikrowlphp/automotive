@@ -1,0 +1,26 @@
+{
+  "$schema": "https://getcomposer.org/schema.json",
+  "name": "mikrowl/automotive",
+  "type": "mikrowl-package",
+  "description": "Automotive Package - Vehicle management for mechanics and tire shops",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Packages\\Automotive\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "cCast",
+      "email": "software@ccast.it"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "composer/installers": "^2.0"
+  },
+  "extra": {
+    "name": "automotive"
+  },
+  "prefer-stable": true
+}
