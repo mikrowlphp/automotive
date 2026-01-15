@@ -151,12 +151,12 @@ class VehicleForm
                     ->columns(12)
                     ->columnSpan(12),
 
-                // Notes section
+                // NOTES ZONE - Always last, fullspan
                 Textarea::make('notes')
-                    ->hiddenLabel()
+                    ->label(__('automotive::vehicles.notes'))
+                    ->placeholder(__('automotive::vehicles.notes_placeholder'))
                     ->rows(4)
-                    ->columnSpanFull()
-                    ->placeholder(__('automotive::vehicles.notes_placeholder')),
+                    ->columnSpanFull(),
             ])->columns(12)->columnSpan(['default' => 12]),
         ]);
     }
