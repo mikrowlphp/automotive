@@ -92,6 +92,7 @@ return [
         'cancelled' => 'Annullato',
     ],
     'customer_complaint' => 'Problema Segnalato dal Cliente',
+    'diagnosis_label' => 'Diagnosi',
     'notes' => 'Note',
     'total_amount' => 'Totale',
 

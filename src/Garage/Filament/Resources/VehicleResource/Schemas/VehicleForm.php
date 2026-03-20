@@ -14,7 +14,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Packages\Automotive\Garage\Filament\Resources\CarBrandResource\Schemas\CarBrandForm;
 use Packages\Automotive\Garage\Filament\Resources\CarModelResource\Schemas\CarModelForm;
-use Packages\Core\Contacts\Filament\Resources\Contacts\Schemas\ContactForm;
+use Packages\Core\Shared\Filament\Resources\Contacts\Schemas\ContactForm;
 
 class VehicleForm
 {

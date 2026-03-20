@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Packages\Automotive\Garage\Enums\DiagnosisStatus;
-use Packages\Core\Contacts\Models\Contact;
+use Packages\Core\Shared\Models\Contact;
 
 class Diagnosis extends ObservableModel
 {
     use HasFactory, SoftDeletes;
+
+    protected static function newFactory(): \Packages\Automotive\Garage\Database\Factories\DiagnosisFactory
+    {
+        return \Packages\Automotive\Garage\Database\Factories\DiagnosisFactory::new();
+    }
 
     protected static function booted(): void
     {

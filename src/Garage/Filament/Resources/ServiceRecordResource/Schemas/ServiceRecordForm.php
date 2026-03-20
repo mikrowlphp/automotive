@@ -15,7 +15,7 @@ use Filament\Schemas\Schema;
 use Packages\Automotive\Garage\Enums\ServiceRecordStatus;
 use Packages\Automotive\Garage\Filament\Resources\VehicleResource\Schemas\VehicleForm;
 use Packages\Automotive\Garage\Models\Vehicle;
-use Packages\Core\Contacts\Filament\Resources\Contacts\Schemas\ContactForm;
+use Packages\Core\Shared\Filament\Resources\Contacts\Schemas\ContactForm;
 use Filament\Support\Icons\Heroicon;
 
 class ServiceRecordForm
@@ -100,7 +100,7 @@ class ServiceRecordForm
                                 ->placeholder(__('automotive::services.customer_complaint_placeholder')),
 
                             Textarea::make('diagnosis')
-                                ->label(__('automotive::services.diagnosis'))
+                                ->label(__('automotive::services.diagnosis_label'))
                                 ->rows(3)
                                 ->placeholder(__('automotive::services.diagnosis_placeholder')),
                         ])->inlineLabel()->columns(12)->columnSpan([

@@ -13,7 +13,7 @@ class GaragePanelProvider extends PanelProvider
     {
         return $panel
             ->id('garage')
-            ->path('garage')
+            ->path('mikrowl/garage')
             ->discoverForPackage('automotive', 'garage')
             ->resources([
                 ProductResource::class,

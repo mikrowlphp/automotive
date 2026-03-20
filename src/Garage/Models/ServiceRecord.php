@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Packages\Automotive\Garage\Enums\ServiceRecordStatus;
 use Packages\Automotive\Garage\Enums\ServiceType;
-use Packages\Core\Contacts\Models\Contact;
+use Packages\Core\Shared\Models\Contact;
 
 class ServiceRecord extends ObservableModel
 {
     use HasFactory;
+
+    protected static function newFactory(): \Packages\Automotive\Garage\Database\Factories\ServiceRecordFactory
+    {
+        return \Packages\Automotive\Garage\Database\Factories\ServiceRecordFactory::new();
+    }
 
     /**
      * The attributes that are mass assignable.

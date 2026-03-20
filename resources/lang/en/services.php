@@ -93,6 +93,7 @@ return [
     ],
     'customer_complaint' => 'Customer Complaint',
     'diagnosis' => 'Diagnosis',
+    'diagnosis_label' => 'Diagnosis',
     'notes' => 'Notes',
     'total_amount' => 'Total',
 

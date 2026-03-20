@@ -21,6 +21,21 @@ class AutomotiveServiceProvider extends PackageServiceProvider
         return 'automotive';
     }
 
+    public function boot(): void
+    {
+        parent::boot();
+
+        // Lazy-register the Customer->vehicles relation so that the sales package
+        // does not need to import any automotive class. This runs only when the
+        // automotive package is actually loaded.
+        if (class_exists(\Packages\Sales\Shared\Models\Customer::class)) {
+            \Packages\Sales\Shared\Models\Customer::resolveRelationUsing(
+                'vehicles',
+                fn ($model) => $model->hasMany(Vehicle::class, 'customer_id')
+            );
+        }
+    }
+
     public function registerModules(): void
     {
         $this->modules = [
@@ -31,10 +46,11 @@ class AutomotiveServiceProvider extends PackageServiceProvider
                 'panels' => [
                     'Garage\\GaragePanelProvider',
                 ],
-                'seeder' => Garage\Database\Seeders\DatabaseSeeder::class,
+                'seeder' => 'Garage\\Database\\Seeders\\DatabaseSeeder',
                 'dependencies' => [
-                    'inventory',
+                    'sales', // inventory module is part of the sales package
                 ],
+                'installs' => [],
                 'protected' => false,
             ],
         ];

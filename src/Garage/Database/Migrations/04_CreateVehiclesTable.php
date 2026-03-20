@@ -4,6 +4,7 @@ namespace Packages\Automotive\Garage\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateVehiclesTable extends Migration
@@ -57,6 +58,6 @@ class CreateVehiclesTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vehicles');
+        DB::statement('DROP TABLE IF EXISTS vehicles CASCADE');
     }
 }

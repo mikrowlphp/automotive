@@ -6,11 +6,16 @@ use App\Models\ObservableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Packages\Core\Contacts\Models\Contact;
+use Packages\Core\Shared\Models\Contact;
 
 class Vehicle extends ObservableModel
 {
     use HasFactory;
+
+    protected static function newFactory(): \Packages\Automotive\Garage\Database\Factories\VehicleFactory
+    {
+        return \Packages\Automotive\Garage\Database\Factories\VehicleFactory::new();
+    }
 
     /**
      * The attributes that are mass assignable.
