@@ -47,9 +47,7 @@ class AutomotiveServiceProvider extends PackageServiceProvider
                     'Garage\\GaragePanelProvider',
                 ],
                 'seeder' => 'Garage\\Database\\Seeders\\DatabaseSeeder',
-                'dependencies' => [
-                    'sales', // inventory module is part of the sales package
-                ],
+                'dependencies' => ['sales', 'accounting'],
                 'installs' => [],
                 'protected' => false,
             ],
