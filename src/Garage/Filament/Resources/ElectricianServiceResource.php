@@ -2,6 +2,7 @@
 
 namespace Packages\Automotive\Garage\Filament\Resources;
 
+use Filament\Forms\Components\Hidden;
 use App\Library\Extensions\Resource;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
@@ -128,13 +129,9 @@ class ElectricianServiceResource extends Resource
                             ->suffix('km')
                             ->columnSpan(1),
 
-                        Select::make('status')
-                            ->label(__('automotive::services.status'))
-                            ->enum(ServiceRecordStatus::class)
-                            ->default(ServiceRecordStatus::Draft)
-                            ->required()
-                            ->native(false)
-                            ->columnSpan(1),
+                        // Status is managed by ServiceRecordToolbar
+                        Hidden::make('status')
+                            ->default(ServiceRecordStatus::Draft->value),
                     ]),
                 ]),
 

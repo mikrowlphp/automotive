@@ -2,6 +2,7 @@
 
 namespace Packages\Automotive\Garage\Filament\Resources\DiagnosisResource\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -95,12 +96,9 @@ class DiagnosisForm
 
                         Group::make([
                             // Right column - Status
-                            Select::make('status')
-                                ->label(__('automotive::services.diagnosis.status'))
-                                ->options(DiagnosisStatus::class)
-                                ->default(DiagnosisStatus::Draft)
-                                ->required()
-                                ->native(false),
+                            // Status is managed by DiagnosisToolbar
+                            Hidden::make('status')
+                                ->default(DiagnosisStatus::Draft->value),
                         ])->inlineLabel()->columns(12)->columnSpan([
                             'default' => 12,
                             'xl' => 5,

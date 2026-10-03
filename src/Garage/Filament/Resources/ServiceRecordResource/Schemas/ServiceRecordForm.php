@@ -2,6 +2,7 @@
 
 namespace Packages\Automotive\Garage\Filament\Resources\ServiceRecordResource\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -110,12 +111,9 @@ class ServiceRecordForm
 
                         Group::make([
                             // Right column - Status & Total
-                            Select::make('status')
-                                ->label(__('automotive::services.status'))
-                                ->enum(ServiceRecordStatus::class)
-                                ->default(ServiceRecordStatus::Draft)
-                                ->required()
-                                ->native(false),
+                            // Status is managed by ServiceRecordToolbar
+                            Hidden::make('status')
+                                ->default(ServiceRecordStatus::Draft->value),
 
                             TextInput::make('total_amount')
                                 ->label(__('automotive::services.total_amount'))

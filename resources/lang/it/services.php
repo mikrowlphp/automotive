@@ -353,4 +353,19 @@ return [
         'parts_used' => 'Ricambi Utilizzati',
         'search_part' => 'Cerca ricambio per marca o modello...',
     ],
+
+    'toolbar' => [
+        'start' => 'Inizia lavori',
+        'complete' => 'Completa',
+        'cancel' => 'Annulla',
+        'reopen' => 'Riapri',
+        'started_notice' => 'Lavori iniziati',
+        'completed_notice' => 'Intervento completato',
+        'cancelled_notice' => 'Intervento annullato',
+        'reopened_notice' => 'Intervento riaperto',
+        'open_diagnosis' => 'Apri',
+        'close_diagnosis' => 'Chiudi',
+        'diagnosis_opened_notice' => 'Diagnosi aperta',
+        'diagnosis_closed_notice' => 'Diagnosi chiusa',
+    ],
 ];

@@ -2,6 +2,7 @@
 
 namespace Packages\Automotive\Garage\Filament\Resources\ElectricianServiceResource\Pages;
 
+use Packages\Automotive\Garage\Filament\Widgets\ServiceRecordToolbar;
 use Filament\Actions\DeleteAction;
 use App\Library\Extensions\Pages\EditRecord;
 use Packages\Automotive\Garage\Filament\Resources\ElectricianServiceResource;
@@ -9,6 +10,13 @@ use Packages\Automotive\Garage\Filament\Resources\ElectricianServiceResource;
 class EditElectricianService extends EditRecord
 {
     protected static string $resource = ElectricianServiceResource::class;
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            ServiceRecordToolbar::class,
+        ];
+    }
 
     protected function getHeaderActions(): array
     {

@@ -354,4 +354,19 @@ return [
         'parts_used' => 'Parts Used',
         'search_part' => 'Search part by brand or model...',
     ],
+
+    'toolbar' => [
+        'start' => 'Start work',
+        'complete' => 'Complete',
+        'cancel' => 'Cancel',
+        'reopen' => 'Reopen',
+        'started_notice' => 'Work started',
+        'completed_notice' => 'Service completed',
+        'cancelled_notice' => 'Service cancelled',
+        'reopened_notice' => 'Service reopened',
+        'open_diagnosis' => 'Open',
+        'close_diagnosis' => 'Close',
+        'diagnosis_opened_notice' => 'Diagnosis opened',
+        'diagnosis_closed_notice' => 'Diagnosis closed',
+    ],
 ];
