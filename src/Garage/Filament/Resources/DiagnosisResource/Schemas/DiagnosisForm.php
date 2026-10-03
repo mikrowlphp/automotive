@@ -11,12 +11,9 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Html;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\IconSize;
 use Packages\Automotive\Garage\Enums\DiagnosisStatus;
 use Packages\Automotive\Garage\Filament\Resources\VehicleResource\Schemas\VehicleForm;
-use Packages\Automotive\Garage\Models\Vehicle;
 use Filament\Support\Icons\Heroicon;
 
 class DiagnosisForm
@@ -39,15 +36,6 @@ class DiagnosisForm
                         ->searchable(['license_plate', 'vin'])
                         ->preload()
                         ->required()
-                        ->live()
-                        ->afterStateUpdated(function (Set $set, ?int $state) {
-                            if ($state) {
-                                $vehicle = Vehicle::with('customer')->find($state);
-                                if ($vehicle && $vehicle->customer_id) {
-                                    $set('customer_id', $vehicle->customer_id);
-                                }
-                            }
-                        })
                         ->manageOptionForm(fn (Schema $schema) => VehicleForm::configure($schema))
                         ->suffixIcon(Heroicon::Truck)
                         ->columnSpan(['default' => 12, 'xl' => 6]),
