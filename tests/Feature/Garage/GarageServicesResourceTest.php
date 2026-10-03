@@ -272,6 +272,15 @@ dataset('service type create pages', [
 ]);
 
 describe('Service type forms - Vehicle header', function () {
+    it('fills the customer and the mileage when a vehicle is picked', function (string $page) {
+        $vehicle = \Packages\Automotive\Garage\Models\Vehicle::factory()->create(['mileage' => 84000]);
+
+        livewire($page)
+            ->set('data.vehicle_id', $vehicle->id)
+            ->assertSet('data.customer_id', $vehicle->customer_id)
+            ->assertSet('data.mileage_at_service', 84000);
+    })->with('service type create pages')->group('resource', 'garage', 'service-header', 'create');
+
     it('keeps the customer of the vehicle when the service is saved', function (string $page, \Packages\Automotive\Garage\Enums\ServiceType $type, array $parameters) {
         $vehicle = \Packages\Automotive\Garage\Models\Vehicle::factory()->create();
 
@@ -289,4 +298,18 @@ describe('Service type forms - Vehicle header', function () {
             'status' => \Packages\Automotive\Garage\Enums\ServiceRecordStatus::Draft->value,
         ]);
     })->with('service type create pages')->group('resource', 'garage', 'service-header', 'create');
+
+    it('flags a tire service on a motorcycle as two wheeler', function (string $bodyType, bool $expected) {
+        $brand = \Packages\Automotive\Garage\Models\CarBrand::firstOrCreate(['name' => 'Test Brand'], ['is_active' => true]);
+        $carModel = \Packages\Automotive\Garage\Models\CarModel::create(['name' => "Model {$bodyType}", 'car_brand_id' => $brand->id, 'body_type' => $bodyType, 'is_active' => true]);
+        $vehicle = \Packages\Automotive\Garage\Models\Vehicle::factory()->create(['car_model_id' => $carModel->id]);
+
+        livewire(CreateTireService::class)
+            ->set('data.vehicle_id', $vehicle->id)
+            ->assertSet('data.parameters.is_two_wheeler', $expected);
+    })->with([
+        'motorcycle' => ['motorcycle', true],
+        'scooter'    => ['scooter', true],
+        'sedan'      => ['sedan', false],
+    ])->group('resource', 'garage', 'service-header', 'create');
 })->group('garage');
