@@ -12,7 +12,7 @@ class CreateBodyworkService extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['type'] = ServiceType::BODYWORK;
+        $data['type'] = ServiceType::Bodywork;
 
         return $data;
     }

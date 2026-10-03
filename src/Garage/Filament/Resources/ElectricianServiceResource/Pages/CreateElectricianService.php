@@ -12,7 +12,7 @@ class CreateElectricianService extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['type'] = ServiceType::ELECTRICIAN;
+        $data['type'] = ServiceType::Electrician;
 
         return $data;
     }

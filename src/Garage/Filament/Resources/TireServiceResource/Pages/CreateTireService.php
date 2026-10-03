@@ -12,7 +12,7 @@ class CreateTireService extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['type'] = ServiceType::TIRES;
+        $data['type'] = ServiceType::Tires;
 
         return $data;
     }

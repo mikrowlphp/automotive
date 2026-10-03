@@ -12,7 +12,7 @@ class CreateMechanicsService extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['type'] = ServiceType::MECHANICS;
+        $data['type'] = ServiceType::Mechanics;
 
         return $data;
     }

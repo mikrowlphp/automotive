@@ -259,3 +259,34 @@ describe('Service parts - Lines', function () {
             ->and($mechanics->lines()->count())->toBe(0);
     })->group('garage', 'migrations');
 })->group('garage');
+
+// =========================================================================
+// SHARED HEADER (vehicle, date, mileage and customer of every service type)
+// =========================================================================
+
+dataset('service type create pages', [
+    'mechanics'   => [CreateMechanicsService::class, \Packages\Automotive\Garage\Enums\ServiceType::Mechanics, []],
+    'electrician' => [CreateElectricianService::class, \Packages\Automotive\Garage\Enums\ServiceType::Electrician, ['system_area' => 'lighting', 'service_type' => 'repair']],
+    'bodywork'    => [CreateBodyworkService::class, \Packages\Automotive\Garage\Enums\ServiceType::Bodywork, []],
+    'tires'       => [CreateTireService::class, \Packages\Automotive\Garage\Enums\ServiceType::Tires, ['service_type' => 'rotation']],
+]);
+
+describe('Service type forms - Vehicle header', function () {
+    it('keeps the customer of the vehicle when the service is saved', function (string $page, \Packages\Automotive\Garage\Enums\ServiceType $type, array $parameters) {
+        $vehicle = \Packages\Automotive\Garage\Models\Vehicle::factory()->create();
+
+        livewire($page)
+            ->set('data.vehicle_id', $vehicle->id)
+            ->set('data.service_date', '2026-05-04')
+            ->fillForm(['parameters' => $parameters])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        assertDatabaseHas(\Packages\Automotive\Garage\Models\ServiceRecord::class, [
+            'vehicle_id' => $vehicle->id,
+            'customer_id' => $vehicle->customer_id,
+            'type' => $type->value,
+            'status' => \Packages\Automotive\Garage\Enums\ServiceRecordStatus::Draft->value,
+        ]);
+    })->with('service type create pages')->group('resource', 'garage', 'service-header', 'create');
+})->group('garage');
