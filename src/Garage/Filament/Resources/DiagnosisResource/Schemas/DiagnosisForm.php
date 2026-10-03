@@ -75,34 +75,26 @@ class DiagnosisForm
                 // SEPARATOR
                 Html::make("<hr class='my-6 text-gray-300 w-full' />")->columnSpanFull(),
 
-                // BODY ZONE - 7/5 column split
+                // BODY ZONE
                 Section::make()
                     ->schema([
                         Group::make([
-                            // Left column - Main fields
                             Textarea::make('customer_complaint')
                                 ->label(__('automotive::services.diagnosis.customer_complaint'))
                                 ->placeholder(__('automotive::services.diagnosis.customer_complaint_placeholder'))
-                                ->rows(4),
+                                ->rows(4)
+                                ->columnSpanFull(),
 
                             Textarea::make('initial_diagnosis')
                                 ->label(__('automotive::services.diagnosis.initial_diagnosis'))
                                 ->placeholder(__('automotive::services.diagnosis.initial_diagnosis_placeholder'))
-                                ->rows(4),
-                        ])->inlineLabel()->columns(12)->columnSpan([
-                            'default' => 12,
-                            'xl' => 7,
-                        ]),
+                                ->rows(4)
+                                ->columnSpanFull(),
 
-                        Group::make([
-                            // Right column - Status
                             // Status is managed by DiagnosisToolbar
                             Hidden::make('status')
                                 ->default(DiagnosisStatus::Draft->value),
-                        ])->inlineLabel()->columns(12)->columnSpan([
-                            'default' => 12,
-                            'xl' => 5,
-                        ]),
+                        ])->inlineLabel()->columns(12)->columnSpanFull(),
                     ])
                     ->contained(false)
                     ->columns(12)

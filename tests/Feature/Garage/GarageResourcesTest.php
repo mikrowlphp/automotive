@@ -262,3 +262,42 @@ describe('DiagnosisResource - List Page', function () {
             ->assertSuccessful();
     })->group('resource', 'garage', 'diagnoses', 'list');
 })->group('garage');
+
+describe('DiagnosisResource - Create Page', function () {
+    it('can render create page', function () {
+        livewire(\Packages\Automotive\Garage\Filament\Resources\DiagnosisResource\Pages\CreateDiagnosis::class)
+            ->assertSuccessful();
+    })->group('resource', 'garage', 'diagnoses', 'create');
+
+    it('creates a draft diagnosis and takes the customer from the vehicle', function () {
+        $vehicle = \Packages\Automotive\Garage\Models\Vehicle::factory()->create();
+
+        livewire(\Packages\Automotive\Garage\Filament\Resources\DiagnosisResource\Pages\CreateDiagnosis::class)
+            ->fillForm([
+                'vehicle_id' => $vehicle->id,
+                'acceptance_date' => '2026-05-04',
+                'mileage_at_acceptance' => 84000,
+                'customer_complaint' => 'Noise when braking',
+                'initial_diagnosis' => 'Worn pads',
+                'notes' => 'Call the customer before starting',
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        assertDatabaseHas(\Packages\Automotive\Garage\Models\Diagnosis::class, [
+            'vehicle_id' => $vehicle->id,
+            'customer_id' => $vehicle->customer_id,
+            'status' => \Packages\Automotive\Garage\Enums\DiagnosisStatus::Draft->value,
+            'customer_complaint' => 'Noise when braking',
+            'initial_diagnosis' => 'Worn pads',
+            'notes' => 'Call the customer before starting',
+        ]);
+    })->group('resource', 'garage', 'diagnoses', 'create');
+
+    it('requires the vehicle', function () {
+        livewire(\Packages\Automotive\Garage\Filament\Resources\DiagnosisResource\Pages\CreateDiagnosis::class)
+            ->fillForm(['vehicle_id' => null, 'acceptance_date' => '2026-05-04'])
+            ->call('create')
+            ->assertHasFormErrors(['vehicle_id' => 'required']);
+    })->group('resource', 'garage', 'diagnoses', 'validation');
+})->group('garage');
