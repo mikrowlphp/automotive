@@ -105,12 +105,12 @@ return [
         'other' => 'Other',
     ],
     'description' => 'Description',
+    'type' => 'Type',
+    'hours' => 'hours',
     'quantity' => 'Quantity',
     'unit_price' => 'Unit Price',
     'line_total' => 'Line Total',
     'part' => 'Part',
-    'add_part' => 'Add Part',
-    'note' => 'Note',
 
     // Sections
     'service_information' => 'Service Information',
@@ -189,11 +189,6 @@ return [
         'diagnosis_placeholder' => 'Enter the diagnosis...',
         'work_performed' => 'Work Performed',
         'work_performed_placeholder' => 'Describe the work done...',
-        'parts_replaced' => 'Parts Replaced',
-        'part_name' => 'Part Name',
-        'part_quantity' => 'Quantity',
-        'add_part' => 'Add Part',
-        'search_part' => 'Search part by brand or model...',
     ],
 
     // ============================================
@@ -238,8 +233,6 @@ return [
         'insurance_claim' => 'Insurance Claim',
         'insurance_claim_placeholder' => 'Insurance claim number...',
         'damage_description' => 'Damage Description',
-        'parts_used' => 'Parts Used',
-        'search_part' => 'Search part by brand or model...',
     ],
 
     // ============================================
@@ -351,8 +344,6 @@ return [
         'firmware_update_required' => 'Firmware Update Required',
         'firmware_update_help' => 'ECU needs software update',
         'work_performed' => 'Work Performed',
-        'parts_used' => 'Parts Used',
-        'search_part' => 'Search part by brand or model...',
     ],
 
     'toolbar' => [

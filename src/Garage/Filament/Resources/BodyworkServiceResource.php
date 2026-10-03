@@ -6,7 +6,6 @@ use Filament\Forms\Components\Hidden;
 use App\Library\Extensions\Resource;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -20,10 +19,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Packages\Automotive\Garage\Enums\ServiceRecordStatus;
 use Packages\Automotive\Garage\Enums\ServiceType;
 use Packages\Automotive\Garage\Filament\Resources\BodyworkServiceResource\Pages;
+use Packages\Automotive\Garage\Filament\Resources\ServiceRecordResource\Schemas\ServiceLinesSection;
 use Packages\Automotive\Garage\Models\ServiceRecord;
 use Packages\Automotive\Garage\Models\Vehicle;
-use Packages\Sales\Shared\Models\Product;
-use Packages\Sales\Shared\Models\ProductCategory;
 
 use function App\settings;
 
@@ -206,48 +204,14 @@ class BodyworkServiceResource extends Resource
                         ->rows(3)
                         ->columnSpanFull(),
 
-                    Repeater::make('parameters.parts_used')
-                        ->label(__('automotive::services.bodywork.parts_used'))
-                        ->schema([
-                            Select::make('product_id')
-                                ->label(__('automotive::services.part'))
-                                ->options(function () {
-                                    $bodyworkCategory = ProductCategory::where('slug', 'carrozzeria')->first();
-
-                                    return Product::query()
-                                        ->with('brand')
-                                        ->when($bodyworkCategory, fn ($q) => $q->where('category_id', $bodyworkCategory->id))
-                                        ->get()
-                                        ->mapWithKeys(fn ($product) => [
-                                            $product->id => ($product->brand?->name ? $product->brand->name.' - ' : '').$product->name,
-                                        ]);
-                                })
-                                ->searchable()
-                                ->placeholder(__('automotive::services.bodywork.search_part'))
-                                ->required(),
-
-                            TextInput::make('quantity')
-                                ->label(__('automotive::services.quantity'))
-                                ->numeric()
-                                ->default(1)
-                                ->minValue(1)
-                                ->required(),
-
-                            TextInput::make('note')
-                                ->label(__('automotive::services.note')),
-                        ])
-                        ->columns(3)
-                        ->defaultItems(0)
-                        ->addActionLabel(__('automotive::services.add_part'))
-                        ->reorderable(false)
-                        ->grid(1)
-                        ->columnSpanFull(),
-
                     Textarea::make('notes')
                         ->label(__('automotive::services.notes'))
                         ->rows(2)
                         ->columnSpanFull(),
                 ]),
+
+            // Section 3: Priced lines, whose sum is the total amount
+            ServiceLinesSection::make(),
         ]);
     }
 

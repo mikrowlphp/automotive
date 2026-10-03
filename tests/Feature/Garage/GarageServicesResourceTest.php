@@ -6,6 +6,7 @@ use Packages\Automotive\Garage\Filament\Resources\CustomerResource\Pages\CreateC
 use Packages\Automotive\Garage\Filament\Resources\CustomerResource\Pages\EditCustomer;
 use Packages\Automotive\Garage\Filament\Resources\CustomerResource\Pages\ListCustomers;
 use Packages\Automotive\Garage\Filament\Resources\MechanicsServiceResource\Pages\CreateMechanicsService;
+use Packages\Automotive\Garage\Filament\Resources\MechanicsServiceResource\Pages\EditMechanicsService;
 use Packages\Automotive\Garage\Filament\Resources\MechanicsServiceResource\Pages\ListMechanicsServices;
 use Packages\Automotive\Garage\Filament\Resources\ElectricianServiceResource\Pages\CreateElectricianService;
 use Packages\Automotive\Garage\Filament\Resources\ElectricianServiceResource\Pages\ListElectricianServices;
@@ -161,4 +162,100 @@ describe('BodyworkServiceResource - List/Create', function () {
         livewire(CreateBodyworkService::class)
             ->assertSuccessful();
     })->group('resource', 'garage', 'bodywork-service', 'create');
+})->group('garage');
+
+// =========================================================================
+// PRICED LINES (shared by every service type)
+// =========================================================================
+
+describe('Service type forms - Lines', function () {
+    it('fills the priced lines and totals them', function (string $page, \Packages\Automotive\Garage\Enums\ServiceType $type, array $parameters) {
+        $record = \Packages\Automotive\Garage\Models\ServiceRecord::factory()->create(['type' => $type, 'parameters' => $parameters, 'total_amount' => 0]);
+
+        $form = livewire($page, ['record' => $record->id]);
+        $first = array_key_last($form->get('data.lines'));
+
+        $form->set("data.lines.{$first}.description", 'Labour')
+            ->set("data.lines.{$first}.quantity", 1.5)
+            ->set("data.lines.{$first}.unit_price", 40);
+
+        expect($form->get('data.lines'))->toHaveCount(2)
+            ->and($form->get('data.total_amount'))->toEqual(60);
+
+        $form->call('save')->assertHasNoFormErrors();
+
+        expect((float) $record->fresh()->total_amount)->toEqual(60.0)
+            ->and((float) $record->lines()->sole()->line_total)->toEqual(60.0);
+    })->with([
+        'mechanics'   => [\Packages\Automotive\Garage\Filament\Resources\MechanicsServiceResource\Pages\EditMechanicsService::class, \Packages\Automotive\Garage\Enums\ServiceType::Mechanics, []],
+        'electrician' => [\Packages\Automotive\Garage\Filament\Resources\ElectricianServiceResource\Pages\EditElectricianService::class, \Packages\Automotive\Garage\Enums\ServiceType::Electrician, ['system_area' => 'lighting', 'service_type' => 'repair']],
+        'bodywork'    => [\Packages\Automotive\Garage\Filament\Resources\BodyworkServiceResource\Pages\EditBodyworkService::class, \Packages\Automotive\Garage\Enums\ServiceType::Bodywork, []],
+        'tires'       => [\Packages\Automotive\Garage\Filament\Resources\TireServiceResource\Pages\EditTireService::class, \Packages\Automotive\Garage\Enums\ServiceType::Tires, ['service_type' => 'rotation']],
+    ])->group('resource', 'garage', 'service-lines', 'edit');
+})->group('garage');
+
+describe('Service parts - Lines', function () {
+    it('fills a part line from the picked product', function () {
+        $product = \Packages\Sales\Shared\Models\Product::factory()->create(['name' => 'Oil filter', 'selling_price' => 12.5]);
+        $record = \Packages\Automotive\Garage\Models\ServiceRecord::factory()->create(['total_amount' => 0]);
+
+        $form = livewire(EditMechanicsService::class, ['record' => $record->id]);
+        $first = array_key_last($form->get('data.lines'));
+
+        $form->set("data.lines.{$first}.product_id", $product->id)
+            ->set("data.lines.{$first}.quantity", 2);
+
+        $line = $form->get("data.lines.{$first}");
+
+        expect($line['type'])->toBe('part')
+            ->and($line['description'])->toBe('Oil filter')
+            ->and((float) $line['unit_price'])->toEqual(12.5)
+            ->and($form->get('data.lines'))->toHaveCount(2);
+
+        $form->call('save')->assertHasNoFormErrors();
+
+        expect((float) $record->fresh()->total_amount)->toEqual(25.0)
+            ->and($record->lines()->sole()->product_id)->toBe($product->id);
+    })->group('resource', 'garage', 'service-lines', 'edit');
+
+    it('moves the parts of the parameters into part lines', function () {
+        require_once base_path('packages/automotive/src/Garage/Database/Migrations/11_MovePartsToServiceRecordLines.php');
+        $migration = new \Packages\Automotive\Garage\Database\Migrations\MovePartsToServiceRecordLines;
+        $product = \Packages\Sales\Shared\Models\Product::factory()->create(['name' => 'Brake disc']);
+
+        $mechanics = \Packages\Automotive\Garage\Models\ServiceRecord::factory()->create([
+            'type' => \Packages\Automotive\Garage\Enums\ServiceType::Mechanics,
+            'total_amount' => 150,
+            'parameters' => [
+                'work_type' => 'repair',
+                'parts_replaced' => [['product_id' => $product->id, 'quantity' => 2, 'note' => 'Front axle']],
+            ],
+        ]);
+        $bodywork = \Packages\Automotive\Garage\Models\ServiceRecord::factory()->create([
+            'type' => \Packages\Automotive\Garage\Enums\ServiceType::Bodywork,
+            'parameters' => ['parts_used' => [['product_id' => $product->id, 'quantity' => null, 'note' => null]]],
+        ]);
+        $untouched = \Packages\Automotive\Garage\Models\ServiceRecord::factory()->create(['parameters' => ['work_type' => 'check']]);
+
+        $migration->up();
+
+        $line = $mechanics->lines()->sole();
+
+        expect($line->type)->toBe(\Packages\Automotive\Garage\Enums\ServiceLineType::Part)
+            ->and($line->product_id)->toBe($product->id)
+            ->and($line->description)->toBe('Brake disc - Front axle')
+            ->and((float) $line->quantity)->toEqual(2.0)
+            ->and((float) $line->unit_price)->toEqual(0.0)
+            ->and($mechanics->fresh()->parameters)->toBe(['work_type' => 'repair'])
+            ->and((float) $mechanics->fresh()->total_amount)->toEqual(150.0)
+            ->and((float) $bodywork->lines()->sole()->quantity)->toEqual(1.0)
+            ->and($bodywork->fresh()->parameters)->toBe([])
+            ->and($untouched->lines()->count())->toBe(0);
+
+        $migration->down();
+
+        expect($mechanics->fresh()->parameters['parts_replaced'])->toEqual([['product_id' => $product->id, 'quantity' => 2, 'note' => null]])
+            ->and($bodywork->fresh()->parameters['parts_used'][0]['product_id'])->toBe($product->id)
+            ->and($mechanics->lines()->count())->toBe(0);
+    })->group('garage', 'migrations');
 })->group('garage');

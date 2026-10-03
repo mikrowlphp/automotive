@@ -115,14 +115,7 @@ class ServiceRecordForm
                             Hidden::make('status')
                                 ->default(ServiceRecordStatus::Draft->value),
 
-                            TextInput::make('total_amount')
-                                ->label(__('automotive::services.total_amount'))
-                                ->numeric()
-                                ->prefix('€')
-                                ->disabled()
-                                ->dehydrated()
-                                ->default(0)
-                                ->helperText(__('automotive::services.total_amount_help')),
+                            ServiceLinesSection::totalField(),
                         ])->inlineLabel()->columns(12)->columnSpan([
                             'default' => 12,
                             'xl' => 5,
@@ -131,6 +124,9 @@ class ServiceRecordForm
                     ->contained(false)
                     ->columns(12)
                     ->columnSpanFull(),
+
+                // LINES ZONE - The total above is their sum
+                ServiceLinesSection::make(withTotal: false),
 
                 // NOTES ZONE - Always last, fullspan
                 Textarea::make('notes')

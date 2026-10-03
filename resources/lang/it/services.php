@@ -104,12 +104,12 @@ return [
         'other' => 'Altro',
     ],
     'description' => 'Descrizione',
+    'type' => 'Tipo',
+    'hours' => 'ore',
     'quantity' => 'Quantità',
     'unit_price' => 'Prezzo Unitario',
     'line_total' => 'Totale Riga',
     'part' => 'Ricambio',
-    'add_part' => 'Aggiungi Ricambio',
-    'note' => 'Nota',
 
     // Sections
     'service_information' => 'Informazioni Intervento',
@@ -188,11 +188,6 @@ return [
         'diagnosis_placeholder' => 'Inserisci la diagnosi del problema...',
         'work_performed' => 'Lavoro Effettuato',
         'work_performed_placeholder' => 'Descrivi il lavoro eseguito...',
-        'parts_replaced' => 'Ricambi Sostituiti',
-        'part_name' => 'Nome Ricambio',
-        'part_quantity' => 'Quantità',
-        'add_part' => 'Aggiungi Ricambio',
-        'search_part' => 'Cerca ricambio per marca o modello...',
     ],
 
     // ============================================
@@ -237,8 +232,6 @@ return [
         'insurance_claim' => 'Sinistro Assicurazione',
         'insurance_claim_placeholder' => 'Numero pratica assicurazione...',
         'damage_description' => 'Descrizione Danno',
-        'parts_used' => 'Ricambi Utilizzati',
-        'search_part' => 'Cerca ricambio per marca o modello...',
     ],
 
     // ============================================
@@ -350,8 +343,6 @@ return [
         'firmware_update_required' => 'Aggiornamento Firmware Richiesto',
         'firmware_update_help' => 'La centralina necessita di aggiornamento software',
         'work_performed' => 'Lavoro Effettuato',
-        'parts_used' => 'Ricambi Utilizzati',
-        'search_part' => 'Cerca ricambio per marca o modello...',
     ],
 
     'toolbar' => [

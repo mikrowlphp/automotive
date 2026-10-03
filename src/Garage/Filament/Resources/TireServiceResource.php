@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Packages\Automotive\Garage\Enums\ServiceRecordStatus;
 use Packages\Automotive\Garage\Enums\ServiceType;
 use Packages\Automotive\Garage\Filament\Resources\TireServiceResource\Pages;
+use Packages\Automotive\Garage\Filament\Resources\ServiceRecordResource\Schemas\ServiceLinesSection;
 use Packages\Automotive\Garage\Models\ServiceRecord;
 use Packages\Automotive\Garage\Models\Vehicle;
 use Packages\Sales\Shared\Models\Product;
@@ -231,6 +232,9 @@ class TireServiceResource extends Resource
                         ->rows(2)
                         ->columnSpanFull(),
                 ]),
+
+            // Section 3: Priced lines, whose sum is the total amount
+            ServiceLinesSection::make(),
         ]);
     }
 

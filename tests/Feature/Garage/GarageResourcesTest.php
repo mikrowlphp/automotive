@@ -224,6 +224,36 @@ describe('ServiceRecordResource - List Page', function () {
         livewire(ListServiceRecords::class)
             ->assertSuccessful();
     })->group('resource', 'garage', 'service-records', 'list');
+
+    it('fills the lines like a spreadsheet and totals them', function () {
+        $record = \Packages\Automotive\Garage\Models\ServiceRecord::factory()->create(['total_amount' => 0]);
+
+        $page = livewire(\Packages\Automotive\Garage\Filament\Resources\ServiceRecordResource\Pages\EditServiceRecord::class, ['record' => $record->id]);
+
+        $rows = $page->get('data.lines');
+        $first = array_key_last($rows);
+
+        expect($rows)->toHaveCount(1);
+
+        $page->set("data.lines.{$first}.description", 'Brake pads replacement')
+            ->set("data.lines.{$first}.quantity", 2)
+            ->set("data.lines.{$first}.unit_price", 45.5);
+
+        $rows = $page->get('data.lines');
+
+        expect($rows)->toHaveCount(2)
+            ->and($rows[$first]['line_total'])->toEqual(91)
+            ->and($page->get('data.total_amount'))->toEqual(91);
+
+        $page->call('save')->assertHasNoFormErrors();
+
+        $line = $record->lines()->sole();
+
+        expect($line->description)->toBe('Brake pads replacement')
+            ->and((float) $line->line_total)->toEqual(91.0)
+            ->and((float) $record->fresh()->total_amount)->toEqual(91.0)
+            ->and($page->get('data.lines'))->toHaveCount(2);
+    })->group('resource', 'garage', 'service-records', 'edit');
 })->group('garage');
 
 describe('DiagnosisResource - List Page', function () {
