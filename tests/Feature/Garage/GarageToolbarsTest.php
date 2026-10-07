@@ -75,3 +75,17 @@ it('opens and closes a diagnosis from its toolbar', function () {
     livewire(DiagnosisToolbar::class, ['record' => $diagnosis->fresh()])->call('setStatus', DiagnosisStatus::Draft->value);
     expect($diagnosis->fresh()->status)->toBe(DiagnosisStatus::Closed);
 });
+
+it('keeps the status the toolbar set when the page is saved afterwards', function () {
+    $record = ServiceRecord::factory()->create(['status' => ServiceRecordStatus::Draft]);
+
+    // The page is opened first: its form holds the status the record had then
+    $page = livewire(EditServiceRecord::class, ['record' => $record->getRouteKey()]);
+
+    livewire(ServiceRecordToolbar::class, ['record' => $record])->callAction('start');
+
+    $page->fillForm(['notes' => 'edited after the toolbar'])->call('save')->assertHasNoFormErrors();
+
+    expect($record->fresh()->status)->toBe(ServiceRecordStatus::InProgress)
+        ->and($record->fresh()->notes)->toBe('edited after the toolbar');
+});
