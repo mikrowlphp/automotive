@@ -3,6 +3,7 @@
 namespace Packages\Automotive;
 
 use App\PackageServiceProvider;
+use Packages\Automotive\Garage\Filament\Pages\AutomotiveSettingsPage;
 use Packages\Automotive\Garage\Models\CarBrand;
 use Packages\Automotive\Garage\Models\CarModel;
 use Packages\Automotive\Garage\Models\Diagnosis;
@@ -34,6 +35,13 @@ class AutomotiveServiceProvider extends PackageServiceProvider
                 fn ($model) => $model->hasMany(Vehicle::class, 'customer_id')
             );
         }
+    }
+
+    protected function settingsPages(): array
+    {
+        return [
+            AutomotiveSettingsPage::class,
+        ];
     }
 
     public function registerModules(): void
